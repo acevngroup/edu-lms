@@ -1,5 +1,5 @@
 @echo off
-setlocal
+setlocal enabledelayedexpansion
 
 REM Get the directory of this script, then go to the Devrepo root.
 set "SCRIPT_DIR=%~dp0"
@@ -10,57 +10,65 @@ set "ENV_FILE=%CD%\.env"
 
 if not exist "%ENV_FILE%" (
     echo ERROR: .env file not found at %ENV_FILE%
-    echo Please create Devrepo/.env with your Moodle Docker configuration.
+    echo Please create .env with your Moodle Docker configuration.
     pause
     exit /b 1
 )
 
 echo Loading environment variables from %ENV_FILE%
 
-REM Read .env file line by line and set environment variables for current session
-for /f "usebackq tokens=*" %%a in ("%ENV_FILE%") do (
-    call :ProcessLine "%%a"
+REM Read .env file and export variables
+for /f "usebackq tokens=1* delims==" %%a in ("%ENV_FILE%") do (
+    set "line=%%a"
+    REM Skip empty lines and comments
+    if not "!line!"=="" (
+        if not "!line:~0,1!"=="#" (
+            set "key=%%a"
+            set "value=%%b"
+            REM Export the variable by setting it
+            set "%%a=%%b"
+        )
+    )
 )
 
 echo Environment variables loaded.
+echo MOODLE_DOCKER_WWWROOT=%MOODLE_DOCKER_WWWROOT%
+echo MOODLE_DOCKER_DB=%MOODLE_DOCKER_DB%
+echo MOODLE_DOCKER_WEB_PORT=%MOODLE_DOCKER_WEB_PORT%
 
+echo.
 echo Starting Moodle Docker Compose...
 
 REM Change directory to moodle-docker to run its compose command
 cd /d "%CD%\moodle-docker"
 
-REM IMPORTANT: The 'bin/moodle-docker-compose' is a bash script (.sh).
-REM This will only work if 'bash.exe' is in your system's PATH
-REM (e.g., from Git Bash, Cygwin, or WSL).
-REM If not, you might need to specify the full path to your bash executable,
-REM e.g., "C:\Program Files\Git\bin\bash.exe" bin\moodle-docker-compose up -d
-REM Or for WSL: wsl bash bin/moodle-docker-compose up -d
+REM Find bash executable - check Git Bash locations first to avoid WSL issues
+set "BASH_EXE="
 
-bin\moodle-docker-compose up -d
-
-REM End of main script
-goto :eof
-
-REM Subroutine to process each line from the .env file
-:ProcessLine
-set "LINE=%~1"
-REM Skip empty lines or comments (lines starting with #)
-if "%LINE%"=="" goto :eof
-if "%LINE:~0,1%"=="#" goto :eof
-
-REM Split the line at the first '=' to get KEY and VALUE
-for /f "tokens=1* delims==" %%i in ("%LINE%") do (
-    set "KEY=%%i"
-    set "VALUE=%%j"
-    
-    REM Normalize MOODLE_DOCKER_WWWROOT: replace backslashes with forward slashes
-    if /i "%KEY%"=="MOODLE_DOCKER_WWWROOT" (
-        set "VALUE=!VALUE:\=/!"
-    )
-    
-    REM Set the environment variable
-    set "%KEY%=%VALUE%"
+REM Check common Git Bash installation paths
+if exist "C:\Program Files\Git\bin\bash.exe" (
+    set "BASH_EXE=C:\Program Files\Git\bin\bash.exe"
+) else if exist "C:\Program Files (x86)\Git\bin\bash.exe" (
+    set "BASH_EXE=C:\Program Files (x86)\Git\bin\bash.exe"
+) else if exist "%ProgramFiles%\Git\bin\bash.exe" (
+    set "BASH_EXE=%ProgramFiles%\Git\bin\bash.exe"
+) else if exist "%ProgramFiles(x86)%\Git\bin\bash.exe" (
+    set "BASH_EXE=%ProgramFiles(x86)%\Git\bin\bash.exe"
+) else if exist "%LOCALAPPDATA%\Programs\Git\bin\bash.exe" (
+    set "BASH_EXE=%LOCALAPPDATA%\Programs\Git\bin\bash.exe"
 )
-goto :eof
+
+if not "%BASH_EXE%"=="" (
+    echo Running moodle-docker-compose with Git Bash...
+    echo Using: %BASH_EXE%
+    "%BASH_EXE%" bin/moodle-docker-compose up -d
+) else (
+    echo ERROR: Git Bash not found
+    echo Please install Git for Windows from: https://git-scm.com/download/win
+    echo.
+    echo After installation, run this script again.
+    pause
+    exit /b 1
+)
 
 endlocal

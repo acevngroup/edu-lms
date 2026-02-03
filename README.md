@@ -35,6 +35,15 @@ MOODLE_DOCKER_DB=pgsql
 MOODLE_DOCKER_WEB_PORT=8080
 ```
 
+**For Windows Users:**
+```
+MOODLE_DOCKER_WWWROOT=D:/pythonProject/edu-lms/moodle
+MOODLE_DOCKER_DB=pgsql
+MOODLE_DOCKER_WEB_PORT=8080
+```
+(Note: Use forward slashes `/` even on Windows, and ensure it's an absolute path)
+```
+
 **Note**: The provided `run.bat` and `run.sh` scripts will automatically load these variables into your environment before starting Docker Compose.
 
 ## Usage
