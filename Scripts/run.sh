@@ -22,6 +22,24 @@ set +a
 
 echo "Environment variables loaded."
 
+# Copy all AI related plugins into the Moodle directory, overwriting existing.
+echo "Copying AI plugin..."
+# Create destination directory if it doesn't exist.
+# Copy Gemini provider plugin
+mkdir -p "./moodle/public/ai/provider/gemini"
+cp -r "./Plugin/moodle-aiprovider_gemini/." "./moodle/public/ai/provider/gemini"
+# Copy AI Manager local plugin
+mkdir -p "./moodle/local/ai_manager"
+cp -r "./Plugin/moodle-local_ai_manager/." "./moodle/local/ai_manager"
+# Copy TinyMCE AI plugin
+mkdir -p "./moodle/lib/editor/tiny/plugins/ai"
+cp -r "./Plugin/moodle-tiny_ai/." "././moodle/lib/editor/tiny/plugins/ai"
+# Copy Atto AI plugin
+mkdir -p "./moodle/blocks/ai_chat"
+cp -r "./Plugin/moodle-block_ai_chat/." "./moodle/blocks/ai_chat"
+
+echo "AI provider plugin copied."
+
 echo "Starting Moodle Docker Compose..."
 
 # Change directory to moodle-docker to run its compose command

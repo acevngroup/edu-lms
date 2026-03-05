@@ -8,6 +8,16 @@ cd /d "%SCRIPT_DIR%.."
 REM Define the path to the main .env file in Devrepo root
 set "ENV_FILE=%CD%\.env"
 
+if not exist "%ENV_FILE%" (@echo off
+setlocal
+
+REM Get the directory of this script, then go to the Devrepo root.
+set "SCRIPT_DIR=%~dp0"
+cd /d "%SCRIPT_DIR%.."
+
+REM Define the path to the main .env file in Devrepo root
+set "ENV_FILE=%CD%\.env"
+
 if not exist "%ENV_FILE%" (
     echo ERROR: .env file not found at %ENV_FILE%
     echo Please create Devrepo/.env with your Moodle Docker configuration.
@@ -23,6 +33,31 @@ for /f "usebackq tokens=*" %%a in ("%ENV_FILE%") do (
 )
 
 echo Environment variables loaded.
+
+REM Copy all AI related plugins into the Moodle directory, overwriting existing.
+echo Copying AI plugins...
+
+REM Copy Gemini provider plugin
+if exist "%CD%\moodle\public\ai\provider\gemini" ( rmdir /s /q "%CD%\moodle\public\ai\provider\gemini" )
+mkdir "%CD%\moodle\public\ai\provider\gemini"
+xcopy "%CD%\Plugin\moodle-aiprovider_gemini" "%CD%\moodle\public\ai\provider\gemini\" /E /I /Y
+
+REM Copy AI Manager local plugin
+if exist "%CD%\moodle\local\ai_manager" ( rmdir /s /q "%CD%\moodle\local\ai_manager" )
+mkdir "%CD%\moodle\local\ai_manager"
+xcopy "%CD%\Plugin\moodle-local_ai_manager" "%CD%\moodle\local\ai_manager\" /E /I /Y
+
+REM Copy TinyMCE AI plugin
+if exist "%CD%\moodle\lib\editor\tiny\plugins\ai" ( rmdir /s /q "%CD%\moodle\lib\editor\tiny\plugins\ai" )
+mkdir "%CD%\moodle\lib\editor\tiny\plugins\ai"
+xcopy "%CD%\Plugin\moodle-tiny_ai" "%CD%\moodle\lib\editor\tiny\plugins\ai\" /E /I /Y
+
+REM Copy AI Chat block
+if exist "%CD%\moodle\blocks\ai_chat" ( rmdir /s /q "%CD%\moodle\blocks\ai_chat" )
+mkdir "%CD%\moodle\blocks\ai_chat"
+xcopy "%CD%\Plugin\moodle-block_ai_chat" "%CD%\moodle\blocks\ai_chat\" /E /I /Y
+
+echo All AI plugins copied.
 
 echo Starting Moodle Docker Compose...
 
