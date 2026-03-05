@@ -33,17 +33,17 @@ cp -r "./Plugin/moodle-aiprovider_gemini/." "./moodle/public/ai/provider/gemini"
 # Copy AI Manager local plugin
 rm -rf "./moodle/local/ai_manager"
 mkdir -p "./moodle/local/ai_manager"
-cp -r "./Plugin/moodle-local_ai_manager/." "./moodle/local/ai_manager"
+cp -r "./Plugin/moodle-local_ai_manager/." "./moodle/public/local/ai_manager"
 
 # Copy TinyMCE AI plugin
 rm -rf "./moodle/lib/editor/tiny/plugins/ai"
 mkdir -p "./moodle/lib/editor/tiny/plugins/ai"
-cp -r "./Plugin/moodle-tiny_ai/." "./moodle/lib/editor/tiny/plugins/ai"
+cp -r "./Plugin/moodle-tiny_ai/." "./moodle/public/lib/editor/tiny/plugins/ai"
 
 # Copy AI Chat block
 rm -rf "./moodle/blocks/ai_chat"
 mkdir -p "./moodle/blocks/ai_chat"
-cp -r "./Plugin/moodle-block_ai_chat/." "./moodle/blocks/ai_chat"
+cp -r "./Plugin/moodle-block_ai_chat/." "./moodle/public/blocks/ai_chat"
 
 echo "All AI plugins copied."
 
