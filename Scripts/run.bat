@@ -8,16 +8,6 @@ cd /d "%SCRIPT_DIR%.."
 REM Define the path to the main .env file in Devrepo root
 set "ENV_FILE=%CD%\.env"
 
-if not exist "%ENV_FILE%" (@echo off
-setlocal
-
-REM Get the directory of this script, then go to the Devrepo root.
-set "SCRIPT_DIR=%~dp0"
-cd /d "%SCRIPT_DIR%.."
-
-REM Define the path to the main .env file in Devrepo root
-set "ENV_FILE=%CD%\.env"
-
 if not exist "%ENV_FILE%" (
     echo ERROR: .env file not found at %ENV_FILE%
     echo Please create Devrepo/.env with your Moodle Docker configuration.
@@ -64,14 +54,17 @@ echo Starting Moodle Docker Compose...
 REM Change directory to moodle-docker to run its compose command
 cd /d "%CD%\moodle-docker"
 
-REM IMPORTANT: The 'bin/moodle-docker-compose' is a bash script (.sh).
-REM This will only work if 'bash.exe' is in your system's PATH
-REM (e.g., from Git Bash, Cygwin, or WSL).
-REM If not, you might need to specify the full path to your bash executable,
-REM e.g., "C:\Program Files\Git\bin\bash.exe" bin\moodle-docker-compose up -d
-REM Or for WSL: wsl bash bin/moodle-docker-compose up -d
+REM Define the bash executable. By default, it looks for 'bash.exe' in your system's PATH.
+REM If 'bash.exe' is not in your PATH (e.g., you're using Git Bash, Cygwin, or WSL),
+REM you can uncomment and set the full path here.
+REM Examples:
+REM set "BASH_EXE=C:\Program Files\Git\bin\bash.exe"
+REM set "BASH_EXE=wsl bash"
+set "BASH_EXE=bash.exe"
 
-bin\moodle-docker-compose up -d
+REM IMPORTANT: The 'bin/moodle-docker-compose' is a bash script (.sh).
+REM This will only work if '%BASH_EXE%' successfully finds bash.
+%BASH_EXE% bin\moodle-docker-compose up -d
 
 REM End of main script
 goto :eof
