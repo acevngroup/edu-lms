@@ -17,3 +17,6 @@
 [submodule "Plugin/moodle-block_ai_chat"]
 	path = Plugin/moodle-block_ai_chat
 	url = https://github.com/bycs-lp/moodle-block_ai_chat.git
+[submodule "Plugin/moodle-block_openai_chat"]
+	path = Plugin/moodle-block_openai_chat
+	url = https://github.com/Limekiller/moodle-block_openai_chat.git
