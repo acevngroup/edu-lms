@@ -4,3 +4,9 @@
 [submodule "moodle-docker"]
 	path = moodle-docker
 	url = https://github.com/moodlehq/moodle-docker.git
+[submodule "Plugin/moodle-block_exaaichat"]
+	path = Plugin/moodle-block_exaaichat
+	url = https://github.com/gtn/moodle-block_exaaichat.git
+[submodule "Plugin/moodle-aiplacement_exaaichat"]
+	path = Plugin/moodle-aiplacement_exaaichat
+	url = https://github.com/gtn/moodle-aiplacement_exaaichat.git
