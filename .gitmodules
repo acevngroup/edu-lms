@@ -4,19 +4,3 @@
 [submodule "moodle-docker"]
 	path = moodle-docker
 	url = https://github.com/moodlehq/moodle-docker.git
-[submodule "Plugin/moodle-aiprovider_gemini"]
-	path = Plugin/moodle-aiprovider_gemini
-	url = https://github.com/Universita-di-Ferrara/moodle-aiprovider_gemini.git
-	branch = moodle50
-[submodule "Plugin/moodle-tiny_ai"]
-	path = Plugin/moodle-tiny_ai
-	url = https://github.com/bycs-lp/moodle-tiny_ai.git
-[submodule "Plugin/moodle-local_ai_manager"]
-	path = Plugin/moodle-local_ai_manager
-	url = https://github.com/bycs-lp/moodle-local_ai_manager.git
-[submodule "Plugin/moodle-block_ai_chat"]
-	path = Plugin/moodle-block_ai_chat
-	url = https://github.com/bycs-lp/moodle-block_ai_chat.git
-[submodule "Plugin/moodle-block_openai_chat"]
-	path = Plugin/moodle-block_openai_chat
-	url = https://github.com/Limekiller/moodle-block_openai_chat.git
